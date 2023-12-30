@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvbrmxhru5jdh"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/world.gd" id="1_56kgr"]
+[ext_resource type="PackedScene" uid="uid://o5ye0b74rd6d" path="res://Assets/Scenes/aloft_alt.tscn" id="2_6pu6q"]
+[ext_resource type="PackedScene" uid="uid://dk6ebsmppbf1l" path="res://Assets/Scenes/Controls_Layer.tscn" id="3_dspq8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tw36l"]
+font_size = 6
+
+[node name="World" type="Node"]
+script = ExtResource("1_56kgr")
+
+[node name="Controls_Layer" parent="." instance=ExtResource("3_dspq8")]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls_Layer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -9.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MoveStats" type="Label" parent="Controls_Layer/VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_tw36l")
+
+[node name="GameObjects" type="CanvasGroup" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="GameObjects"]
+collision_layer = 4
+collision_mask = 7
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="GameObjects/StaticBody2D"]
+position = Vector2(0, 4)
+polygon = PackedVector2Array(13, 92, 31, 98, 29, 125, 64, 144, 112, 144, 119, 123, 143, 122, 151, 104, 177, 104, 179, 79, 206, 78, 207, 102, 304, 100, 305, 60, 320, 60, 356, 45, 417, 89, 477, 112, 500, 171, 500, 199, 451, 157, 231, 155, 88, 234, 122, 275, 199, 326, 314, 376, 389, 404, 562, 426, 644, 427, 727, 346, 669, 348, 554, 347, 386, 284, 316, 267, 324, 296, 305, 310, 213, 262, 253, 250, 445, 241, 549, 274, 552, 242, 564, 150, 581, 115, 595, 63, 614, 59, 591, 212, 562, 286, 480, 291, 622, 312, 758, 311, 735, 495, 182, 471, 150, 403, 3, 307, 0, 176, -1, 61, 10, 63)
+
+[node name="Polygon2D" type="Polygon2D" parent="GameObjects/StaticBody2D/CollisionPolygon2D"]
+color = Color(0.505882, 0.239216, 0.133333, 1)
+
+[node name="Aloft_Alt" parent="GameObjects" instance=ExtResource("2_6pu6q")]
+position = Vector2(80, 131)
+scale = Vector2(1, 1)
+collision_mask = 4
+floor_constant_speed = true
+floor_snap_length = 0.0
+
+[node name="Camera2D" type="Camera2D" parent="GameObjects/Aloft_Alt"]
+visible = false
+
+[editable path="Controls_Layer"]
+[editable path="GameObjects/Aloft_Alt"]
+[editable path="GameObjects/Aloft_Alt/wind_sprite"]

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://blouiqopm14un"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Classes/zone.gd" id="1_p6t6g"]
+[ext_resource type="PackedScene" uid="uid://bxgmya8a474rc" path="res://Assets/Scenes/test_animation_player.tscn" id="2_7hk0x"]
+[ext_resource type="Script" path="res://Assets/Scripts/TrackWithPlayer.gd" id="3_ocaxf"]
+[ext_resource type="PackedScene" uid="uid://dk6ebsmppbf1l" path="res://Assets/Scenes/Controls_Layer.tscn" id="4_bhdtu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hw50m"]
+size = Vector2(121, 153)
+
+[node name="Zone" type="Node" node_paths=PackedStringArray("player")]
+script = ExtResource("1_p6t6g")
+player = NodePath("TestAnimationPlayer")
+
+[node name="TestAnimationPlayer" parent="." instance=ExtResource("2_7hk0x")]
+collision_layer = 17
+
+[node name="TrackWithPlayer" type="Camera2D" parent="TestAnimationPlayer" node_paths=PackedStringArray("player")]
+zoom = Vector2(0.5, 0.5)
+script = ExtResource("3_ocaxf")
+player = NodePath("..")
+
+[node name="Area2D" type="Area2D" parent="TestAnimationPlayer/TrackWithPlayer"]
+collision_layer = 16
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestAnimationPlayer/TrackWithPlayer/Area2D"]
+position = Vector2(-0.5, -0.5)
+shape = SubResource("RectangleShape2D_hw50m")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(-1, 68, 53, 68, 103, 63, 173, 42, 247, 39, 302, 40, 382, 65, 463, 89, 480, 119, 335, 139, 533, 213, 665, 201, 693, 126, 701, 66, 657, 26, 717, -4, 786, 35, 792, 241, 632, 355, 326, 300, 244, 214, 111, 200, 24, 246, -44, 123, -47, 51, -35, -44, -22, -41, -39, 58)
+
+[node name="Polygon2D" type="Polygon2D" parent="StaticBody2D/CollisionPolygon2D"]
+color = Color(0, 0, 0, 1)
+
+[node name="Controls_Layer" parent="." instance=ExtResource("4_bhdtu")]

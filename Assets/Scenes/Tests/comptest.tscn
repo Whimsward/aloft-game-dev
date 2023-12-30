@@ -1,0 +1,116 @@
+[gd_scene load_steps=19 format=3 uid="uid://dglgem17mjn77"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/Classes/Player.gd" id="1_ewyr4"]
+[ext_resource type="Script" path="res://Assets/Scripts/Classes/PlayerMovementData.gd" id="2_3wbxk"]
+[ext_resource type="Resource" uid="uid://c0o06kn0qmqfe" path="res://Assets/Resources/AloftMovementData.tres" id="2_erun3"]
+[ext_resource type="Resource" uid="uid://dg57bixtdl6fk" path="res://Assets/Resources/DefaultAttackData.tres" id="3_ypkcx"]
+[ext_resource type="Texture2D" uid="uid://biieggxekrcho" path="res://Assets/Resources/Sprite sheet/Flame Ball Share.png" id="4_2bpt0"]
+[ext_resource type="Texture2D" uid="uid://jvcs1g7onqp0" path="res://Assets/Resources/Sprite sheet/Smaller Concept.png" id="4_07a0r"]
+[ext_resource type="PackedScene" uid="uid://daoqixh6ypqhw" path="res://Assets/Scenes/world_collision.tscn" id="5_c7aq5"]
+[ext_resource type="Script" path="res://Assets/Scripts/Classes/StateMachine.gd" id="5_d5x5h"]
+[ext_resource type="Script" path="res://Assets/Scenes/Tests/FireOrbie.gd" id="5_s0sod"]
+[ext_resource type="PackedScene" uid="uid://c264ja6q1odm" path="res://Assets/Scenes/Delete or Refactor/AloftAltAnimator.tscn" id="5_vj7mn"]
+[ext_resource type="Script" path="res://Assets/States/FollowState.gd" id="10_plwyi"]
+[ext_resource type="Script" path="res://Assets/States/Idle.gd" id="12_y26jq"]
+[ext_resource type="Script" path="res://Assets/States/Attack.gd" id="13_b5ny6"]
+[ext_resource type="PackedScene" uid="uid://dk6ebsmppbf1l" path="res://Assets/Scenes/Controls_Layer.tscn" id="14_7fip8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rf212"]
+radius = 8.0
+height = 26.0
+
+[sub_resource type="Curve2D" id="Curve2D_xw7r4"]
+_data = {
+"points": PackedVector2Array(-29.6847, 1.03105, 29.6847, -1.03105, 54.6667, -20, -22.0162, -1.98859, 22.0162, 1.98859, 125.333, -29.3333)
+}
+point_count = 2
+
+[sub_resource type="Resource" id="Resource_vgvj6"]
+script = ExtResource("2_3wbxk")
+speed = 90.0
+jump_velocity = -100.0
+acceleration = 300.0
+friction = 1000.0
+has_gravity = true
+gravity_scale = 1.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fwtpo"]
+radius = 8.0
+height = 18.0
+
+[node name="KidscanCodeFollowtest" type="Node2D"]
+
+[node name="CharTest" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(71, 49)
+collision_mask = 5
+script = ExtResource("1_ewyr4")
+movement_data = ExtResource("2_erun3")
+atk_data = ExtResource("3_ypkcx")
+Has_Pal = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharTest"]
+position = Vector2(-5, 7)
+shape = SubResource("CapsuleShape2D_rf212")
+
+[node name="ArdorSprite" type="Sprite2D" parent="CharTest"]
+position = Vector2(-18, -12)
+texture = ExtResource("4_07a0r")
+centered = false
+hframes = 5
+vframes = 2
+region_enabled = true
+region_rect = Rect2(1, 1, 159, 64)
+
+[node name="AnimationPlayer" parent="CharTest/ArdorSprite" instance=ExtResource("5_vj7mn")]
+
+[node name="Target" type="Marker2D" parent="CharTest/ArdorSprite" groups=["marker"]]
+position = Vector2(20, 11)
+
+[node name="AttackPath" type="Path2D" parent="CharTest/ArdorSprite/Target"]
+position = Vector2(-40, 20)
+scale = Vector2(0.75, 0.75)
+curve = SubResource("Curve2D_xw7r4")
+
+[node name="AttackGuide" type="PathFollow2D" parent="CharTest/ArdorSprite/Target/AttackPath" groups=["guide"]]
+position = Vector2(54.6667, -20)
+rotation = -0.0347194
+loop = false
+
+[node name="FireOrbie" type="CharacterBody2D" parent="CharTest" node_paths=PackedStringArray("parent")]
+position = Vector2(134, -24)
+collision_layer = 2
+collision_mask = 6
+script = ExtResource("5_s0sod")
+MovementData = SubResource("Resource_vgvj6")
+parent = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharTest/FireOrbie"]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_fwtpo")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharTest/FireOrbie"]
+texture = ExtResource("4_2bpt0")
+
+[node name="StateMachineTest" type="Node" parent="CharTest/FireOrbie" node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_d5x5h")
+initial_state = NodePath("Follow")
+
+[node name="Follow" type="Node" parent="CharTest/FireOrbie/StateMachineTest"]
+script = ExtResource("10_plwyi")
+
+[node name="Idle" type="Node" parent="CharTest/FireOrbie/StateMachineTest" node_paths=PackedStringArray("pal")]
+script = ExtResource("12_y26jq")
+pal = NodePath("../..")
+
+[node name="Attack" type="Node" parent="CharTest/FireOrbie/StateMachineTest" node_paths=PackedStringArray("pal")]
+script = ExtResource("13_b5ny6")
+pal = NodePath("../..")
+
+[node name="WorldCollision" parent="." instance=ExtResource("5_c7aq5")]
+
+[node name="Polygon2D" parent="WorldCollision/CollisionPolygon2D" index="0"]
+color = Color(0.188235, 0.458824, 0.447059, 1)
+
+[node name="Controls_Layer" parent="." instance=ExtResource("14_7fip8")]
+
+[editable path="WorldCollision"]

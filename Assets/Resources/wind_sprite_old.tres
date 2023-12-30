@@ -1,0 +1,82 @@
+[gd_resource type="SpriteFrames" load_steps=8 format=3 uid="uid://ed58a86r0a7y"]
+
+[ext_resource type="Texture2D" uid="uid://bwirfy0o6elb6" path="res://Assets/Resources/Sprite sheet/WindySprite.png" id="1_8jeqd"]
+[ext_resource type="Texture2D" uid="uid://b4olb8xoaycs5" path="res://Assets/Resources/Sprite sheet/DarkenedSprite.png" id="2_3bnu5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6lavg"]
+atlas = ExtResource("1_8jeqd")
+region = Rect2(0, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_de8yp"]
+atlas = ExtResource("1_8jeqd")
+region = Rect2(16, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_43mou"]
+atlas = ExtResource("1_8jeqd")
+region = Rect2(32, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r7esw"]
+atlas = ExtResource("1_8jeqd")
+region = Rect2(48, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eyu77"]
+atlas = ExtResource("2_3bnu5")
+region = Rect2(0, 0, 32, 34)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_6lavg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_de8yp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_43mou")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r7esw")
+}],
+"loop": true,
+"name": &"All",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_de8yp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_43mou")
+}],
+"loop": true,
+"name": &"Flit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_43mou")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_6lavg")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eyu77")
+}],
+"loop": true,
+"name": &"Locked",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r7esw")
+}],
+"loop": true,
+"name": &"Pal_Atk",
+"speed": 5.0
+}]

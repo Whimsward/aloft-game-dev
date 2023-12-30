@@ -1,0 +1,85 @@
+[gd_scene load_steps=15 format=3 uid="uid://bwtmkvquu7wji"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/wind_sprite.gd" id="1_0ujyu"]
+[ext_resource type="Resource" uid="uid://byqosagqwc2lw" path="res://Assets/Resources/PlayableWindSpriteMovementData.tres" id="2_vkhv3"]
+[ext_resource type="Texture2D" uid="uid://cfp4prvlunthr" path="res://Assets/Resources/Sprite sheet/Pal versions.png" id="3_1xd2a"]
+[ext_resource type="Texture2D" uid="uid://djutc2moqcm7y" path="res://Assets/Resources/Sprite sheet/ele_sprites.png" id="3_lsfgr"]
+[ext_resource type="Script" path="res://Assets/Scripts/Classes/StateMachine.gd" id="5_ydxbx"]
+[ext_resource type="PackedScene" uid="uid://cwxmdfdx81c2f" path="res://Assets/States/FollowState.tscn" id="6_h04xb"]
+[ext_resource type="PackedScene" uid="uid://bx48x0mgfktu1" path="res://Assets/States/PalAttackState.tscn" id="8_443aa"]
+[ext_resource type="Resource" uid="uid://b3jhy5kfogw5x" path="res://Assets/Resources/WindSpriteMovementData.tres" id="8_jqtx0"]
+[ext_resource type="PackedScene" uid="uid://c83xarop8tc7b" path="res://Assets/States/PalIdleState.tscn" id="9_ecuol"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mkeov"]
+height = 28.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1y7f"]
+atlas = ExtResource("3_1xd2a")
+region = Rect2(11, 10, 9, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlehn"]
+atlas = ExtResource("3_1xd2a")
+region = Rect2(11, 19, 9, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1aw6o"]
+atlas = ExtResource("3_lsfgr")
+region = Rect2(17, 32, 11, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2whc6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j1y7f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlehn")
+}],
+"loop": true,
+"name": &"atk",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1aw6o")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="wind_sprite" type="CharacterBody2D" groups=["pal"]]
+position = Vector2(16, 16)
+scale = Vector2(0.5, 0.5)
+collision_layer = 2
+collision_mask = 14
+script = ExtResource("1_0ujyu")
+MovementData = ExtResource("2_vkhv3")
+
+[node name="Wind_Sprite_Collision" type="CollisionShape2D" parent="."]
+position = Vector2(-2, 0)
+shape = SubResource("CapsuleShape2D_mkeov")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_2whc6")
+animation = &"atk"
+frame_progress = 0.44999
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_ydxbx")
+initial_state = NodePath("Idle")
+
+[node name="Follow" parent="StateMachine" instance=ExtResource("6_h04xb")]
+
+[node name="Idle" parent="StateMachine" node_paths=PackedStringArray("pal") instance=ExtResource("9_ecuol")]
+pal = NodePath("../..")
+movement_data = ExtResource("8_jqtx0")
+
+[node name="Attack" parent="StateMachine" node_paths=PackedStringArray("pal") instance=ExtResource("8_443aa")]
+pal = NodePath("../..")
+
+[node name="RayCast2D" type="RayCast2D" parent="." groups=["guide"]]
+enabled = false
+target_position = Vector2(100, -15)
+collision_mask = 4

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx48x0mgfktu1"]
+
+[ext_resource type="Script" path="res://Assets/States/Attack.gd" id="1_dlmiv"]
+
+[node name="Attack" type="Node"]
+script = ExtResource("1_dlmiv")
